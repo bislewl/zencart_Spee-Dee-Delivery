@@ -21,7 +21,6 @@ class speedee extends base {
         $this->icon = DIR_WS_IMAGES . 'icons/speedee_round.jpg';
         $this->tax_class = MODULE_SHIPPING_SPEEDEE_TAX_CLASS;
         $this->enabled = ((MODULE_SHIPPING_SPEEDEE_STATUS == 'True') ? true : false);
-        if (MODULE_SHIPPING_USPS_STATUS == 'True') {
             if (IS_ADMIN_FLAG) {
                 $this->enabled = TRUE;
                 $new_version_details = plugin_version_check_for_updates(1884, MODULE_SHIPPING_SPEEDEE_VERSION);
@@ -29,7 +28,6 @@ class speedee extends base {
                     $this->title .= '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" target="_blank">[Details]</a>' . '</span>';
                 }
             }
-        }
         $speeddee_monthyear = date("Ym");
         if (MODULE_SHIPPING_SPEEDEE_VERSION == 'True' && $speeddee_monthyear > MODULE_SHIPPING_SPEEDEE_FUEL_SURCHARGE_LAST_UPDATE) {
             $update_surcharge = false;
@@ -135,7 +133,7 @@ class speedee extends base {
             $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Fuel Surcharge Rate - Auromatic Update', 'MODULE_SHIPPING_SPEEDEE_FUEL_SURCHARGE_AUTO_UPDATE', 'True', 'Auto Update Fuel Surcharge', '6', '6', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
             $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Fuel Surcharge Rate - Last Update', 'MODULE_SHIPPING_SPEEDEE_FUEL_SURCHARGE_LAST_UPDATE', '201411', 'Last Month fuel surcharge was updated', '6', '7', now())");
             $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Account Number', 'MODULE_SHIPPING_SPEEDEE_ACCOUNT', '1011', 'This is your Spee-Dee Deilvery Account Number', '6', '8', now())");
-            $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Version', 'MODULE_SHIPPING_SPEEDEE_VERSION', '1.1.0', 'SpeeDee Delivery Module Version', '6', '99', now())");
+            $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Version', 'MODULE_SHIPPING_SPEEDEE_VERSION', '1.1.1', 'SpeeDee Delivery Module Version', '6', '99', now())");
         }
 
         function remove() {
@@ -154,22 +152,28 @@ class speedee extends base {
 /**
  * this is ONLY here to offer compatibility with ZC versions prior to v1.5.2
  */
-if (!function_exists('plugin_version_check_for_updates')) {
-
+    if (!function_exists('plugin_version_check_for_updates')) {
     function plugin_version_check_for_updates($fileid = 0, $version_string_to_check = '') {
-        if ($fileid == 0)
+        if ($fileid == 0){
             return FALSE;
+        }
         $new_version_available = FALSE;
         $lookup_index = 0;
-        $url = 'http://www.zen-cart.com/downloads.php?do=versioncheck' . '&id=' . (int) $fileid;
+        $url = 'https://www.zen-cart.com/downloads.php?do=versioncheck' . '&id=' . (int) $fileid;
         $data = json_decode(file_get_contents($url), true);
+        if (!$data || !is_array($data)) return false;
         // compare versions
-        if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_check) > 0)
+        if (version_compare($data[$lookup_index]['latest_plugin_version'], $version_string_to_check) > 0) {
             $new_version_available = TRUE;
+        }
         // check whether present ZC version is compatible with the latest available plugin version
-        if (!in_array('v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR, $data[$lookup_index]['zcversions']))
+        if (!in_array('v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR, $data[$lookup_index]['zcversions'])) {
             $new_version_available = FALSE;
-        return ($new_version_available) ? $data[$lookup_index] : FALSE;
+        }
+        if ($version_string_to_check == true) {
+            return $data[$lookup_index];
+        } else {
+            return FALSE;
+        }
     }
-
 }
