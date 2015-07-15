@@ -10,7 +10,7 @@ class speedee extends base {
     var $code, $title, $description, $icon, $enabled;
 
 // class constructor
-    function __construct() {
+    function speedee() {
         global $order, $db;
 
         $this->code = 'speedee';
@@ -69,7 +69,7 @@ class speedee extends base {
                 $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . $speeddee_monthyear . "' WHERE configuration_key='MODULE_SHIPPING_SPEEDEE_FUEL_SURCHARGE_LAST_UPDATE'");
             }
         }
-
+	}
 // class methods
         function quote($method = '') {
             global $order, $shipping_weight, $shipping_num_boxes, $total_weight, $boxcount, $handling_cp, $cart;
@@ -133,7 +133,7 @@ class speedee extends base {
             $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Fuel Surcharge Rate - Auromatic Update', 'MODULE_SHIPPING_SPEEDEE_FUEL_SURCHARGE_AUTO_UPDATE', 'True', 'Auto Update Fuel Surcharge', '6', '6', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
             $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Fuel Surcharge Rate - Last Update', 'MODULE_SHIPPING_SPEEDEE_FUEL_SURCHARGE_LAST_UPDATE', '201411', 'Last Month fuel surcharge was updated', '6', '7', now())");
             $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Account Number', 'MODULE_SHIPPING_SPEEDEE_ACCOUNT', '1011', 'This is your Spee-Dee Deilvery Account Number', '6', '8', now())");
-            $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Version', 'MODULE_SHIPPING_SPEEDEE_VERSION', '1.1.1', 'SpeeDee Delivery Module Version', '6', '99', now())");
+            $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Version', 'MODULE_SHIPPING_SPEEDEE_VERSION', '1.1.3', 'SpeeDee Delivery Module Version', '6', '99', now())");
         }
 
         function remove() {
@@ -144,8 +144,6 @@ class speedee extends base {
         function keys() {
             return array('MODULE_SHIPPING_SPEEDEE_STATUS', 'MODULE_SHIPPING_SPEEDEE_TAX_CLASS', 'MODULE_SHIPPING_SPEEDEE_MARK_UP', 'MODULE_SHIPPING_SPEEDEE_SORT_ORDER', 'MODULE_SHIPPING_SPEEDEE_FUEL_SURCHARGE', 'MODULE_SHIPPING_SPEEDEE_ACCOUNT', 'MODULE_SHIPPING_SPEEDEE_FUEL_SURCHARGE_LAST_UPDATE', 'MODULE_SHIPPING_SPEEDEE_FUEL_SURCHARGE_AUTO_UPDATE', 'MODULE_SHIPPING_SPEEDEE_VERSION');
         }
-
-    }
 
 }
 
